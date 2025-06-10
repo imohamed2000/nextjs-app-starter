@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  type         String   // multiple-choice, writing, listening, speaking
+  skill        String   // reading, writing, listening, speaking
+  question     String
+  options      String?  // For multiple choice questions (JSON string)
+  correctAnswer String? // For multiple choice questions
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ExamSession {
+  id           String   @id @default(cuid())
+  userId       String?  // Optional, for authenticated users
+  skill        String
+  mode         String   // practice or exam
+  startTime    DateTime @default(now())
+  endTime      DateTime?
+  score        Float?
+  status       String   // in-progress, completed
+  answers      String   // Store answers as JSON string
+  feedback     String?  // Store feedback as JSON string
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  role      String   @default("user") // user or admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
